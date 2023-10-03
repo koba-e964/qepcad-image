@@ -1,4 +1,4 @@
-FROM ubuntu:23.04
+FROM ubuntu:23.04 AS builder
 
 # Building saclib
 RUN apt update -y && apt install -y wget gcc csh make
@@ -13,5 +13,12 @@ RUN apt install -y libreadline-dev g++
 RUN tar xf qepcad-B.1.69.tar.gz
 ENV qe=/qesource
 RUN cd /qesource && make
+
+FROM ubuntu:23.04
+
+ENV saclib=/saclib2.2.6 qe=/qesource
+RUN apt update -y && apt install -y libreadline8
+COPY --from=builder /qesource/ /qesource/
+COPY --from=builder /saclib2.2.6/lib/ /saclib2.2.6/lib/
 
 ENTRYPOINT ["/qesource/bin/qepcadd"]
