@@ -16,9 +16,8 @@ RUN cd /qesource && make
 
 FROM ubuntu:23.04
 
-ENV saclib=/saclib2.2.6 qe=/qesource
+ENV qe=/qesource
 RUN apt update -y && apt install -y libreadline8
 COPY --from=builder /qesource/ /qesource/
-COPY --from=builder /saclib2.2.6/lib/ /saclib2.2.6/lib/
 
 ENTRYPOINT ["/qesource/bin/qepcadd"]
